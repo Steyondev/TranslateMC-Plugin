@@ -4,8 +4,41 @@ plugins {
     id 'maven-publish'
 }
 
+// Automatic versioning from environment variable or Git
+def getVersion() {
+    // First, try to get VERSION from environment (set by CI/CD)
+    def envVersion = System.getenv('VERSION')
+    if (envVersion && !envVersion.isEmpty()) {
+        println "Using VERSION from environment: ${envVersion}"
+        return envVersion
+    }
+    
+    // Fallback to Git tags
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'describe', '--tags', '--always', '--dirty'
+            standardOutput = stdout
+            errorOutput = new ByteArrayOutputStream()
+        }
+        def gitVersion = stdout.toString().trim()
+        println "Using VERSION from Git: ${gitVersion}"
+        
+        // Remove 'v' prefix if present (e.g., v1.0.1 -> 1.0.1)
+        if (gitVersion.startsWith('v')) {
+            return gitVersion.substring(1)
+        }
+        return gitVersion
+    } catch (Exception e) {
+        println "Warning: Could not determine version from Git. Using default version."
+        return '1.0.0-dev'
+    }
+}
+
 group = 'dev.steyon'
-version = '1.0.0'
+version = getVersion()
+
+println "Building TranslateMC-Plugin version: ${version}"
 
 repositories {
     mavenCentral()
