@@ -1,0 +1,25 @@
+name: TranslateMC-Plugin
+version: '1.0-SNAPSHOT'
+main: dev.steyon.translateMCPlugin.TranslateMCPlugin
+api-version: '1.21'
+authors: [ TinyBrickBoy ]
+description: Easily translate your server with our plugin!
+website: https://TranslateMC.com
+
+softdepend: ["PlaceholderAPI"]
+
+commands:
+  translate:
+    description: Select your language or view translations
+    usage: /<command> [language|reload]
+    aliases: [lang, language]
+    permission: translatemc.use
+    permission-message: You don't have permission to use this command!
+
+permissions:
+  translatemc.use:
+    description: Allows players to use the translate command
+    default: true
+  translatemc.admin.reload:
+    description: Allows admins to reload the plugin configuration
+    default: op

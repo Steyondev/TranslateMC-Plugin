@@ -1,0 +1,32 @@
+# TranslateMC Plugin Configuration
+
+# API Configuration
+api:
+  # Base URL of your translation API (without trailing slash)
+  url: "http://localhost:3000/api/v1"
+  # API Token for authentication (replace with your actual token)
+  token: "YOUR_API_TOKEN_HERE"
+
+# Feature Toggles
+features:
+  # Show GUI on first join
+  gui-on-first-join: true
+
+# Language Settings
+language:
+  # Default/Fallback language (typically English)
+  default: "en"
+
+# GUI Settings
+gui:
+  # GUI title
+  title: "&6&lSelect Your Language"
+  # GUI size (must be multiple of 9, max 54)
+  size: 27
+
+# Messages
+messages:
+  # Message shown when language is changed
+  language-changed: "&aYour language has been changed to &e{language}&a!"
+  # Message shown on first join
+  first-join-welcome: "&7Please select your preferred language!"
