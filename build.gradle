@@ -77,6 +77,18 @@ def cleanVersionString(String version) {
         )
     }
     
+    // Ensure Maven-compatible format (major.minor.patch)
+    def parts = version.split('\\.')
+    
+    if (parts.length < 3) {
+        // Add .0 patches if missing (1.4 -> 1.4.0)
+        while (parts.length < 3) {
+            version = version + ".0"
+            parts = version.split('\\.')
+        }
+    }
+    
+    println "Normalized version to Maven format: ${version}"
     return version
 }
 
@@ -141,17 +153,52 @@ processResources {
 publishing {
     repositories {
         maven {
-            name = "github"
+            name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/steyondev/TranslateMC-Plugin")
+            
             credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
+                username = System.getenv("GITHUB_ACTOR") ?: project.findProperty("gpr.user")
+                password = System.getenv("GITHUB_TOKEN") ?: project.findProperty("gpr.key")
             }
         }
     }
     publications {
         gpr(MavenPublication) {
             from(components.java)
+            
+            pom {
+                name = "TranslateMC-Plugin"
+                description = "Easily translate your server with our plugin!"
+                url = "https://github.com/steyondev/TranslateMC-Plugin"
+                
+                scm {
+                    url = "https://github.com/steyondev/TranslateMC-Plugin"
+                    connection = "scm:git:git://github.com/steyondev/TranslateMC-Plugin.git"
+                    developerConnection = "scm:git:ssh://git@github.com:steyondev/TranslateMC-Plugin.git"
+                }
+                
+                licenses {
+                    license {
+                        name = "MIT License"
+                        url = "https://opensource.org/licenses/MIT"
+                    }
+                }
+                
+                developers {
+                    developer {
+                        name = "Steyon Development"
+                    }
+                }
+            }
         }
     }
 }
+
+// Debug: Print version info
+println "==========================================="
+println "Project Configuration:"
+println "  Group: ${group}"
+println "  Artifact: ${rootProject.name}"
+println "  Version: ${version}"
+println "  Repository: https://maven.pkg.github.com/steyondev/TranslateMC-Plugin"
+println "==========================================="
