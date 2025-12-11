@@ -153,15 +153,16 @@ processResources {
 publishing {
     repositories {
         maven {
-            name = "GitHubPackages"
+            name = "github"
             url = uri("https://maven.pkg.github.com/steyondev/TranslateMC-Plugin")
             
             credentials {
-                username = System.getenv("GITHUB_ACTOR") ?: project.findProperty("gpr.user")
-                password = System.getenv("GITHUB_TOKEN") ?: project.findProperty("gpr.key")
+                username = System.getenv("GITHUB_ACTOR") ?: "UNKNOWN"
+                password = System.getenv("GITHUB_TOKEN") ?: "UNKNOWN"
             }
         }
     }
+    
     publications {
         gpr(MavenPublication) {
             from(components.java)
@@ -194,11 +195,15 @@ publishing {
     }
 }
 
-// Debug: Print version info
+// Debug: Print version info and credentials check
 println "==========================================="
 println "Project Configuration:"
 println "  Group: ${group}"
 println "  Artifact: ${rootProject.name}"
 println "  Version: ${version}"
 println "  Repository: https://maven.pkg.github.com/steyondev/TranslateMC-Plugin"
+println "==========================================="
+println "Credentials Check:"
+println "  GITHUB_ACTOR: ${System.getenv("GITHUB_ACTOR") ? "✅ Set" : "❌ NOT SET"}"
+println "  GITHUB_TOKEN: ${System.getenv("GITHUB_TOKEN") ? "✅ Set" : "❌ NOT SET"}"
 println "==========================================="
